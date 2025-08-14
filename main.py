@@ -4,16 +4,15 @@ import requests
 from threading import Thread
 from flask import Flask
 
-# ==== CONFIG (use environment variables in Railway) ====
+# ==== CONFIG (use environment variables) ====
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 BASE_CURRENCY = "GBP"
 TARGET_CURRENCY = "NPR"
-CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", 60))  # default 60 sec
+CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", 60))  # seconds
 
-# Flask app for Railway's web requirement
+# Flask app for Render/Replit requirement
 app = Flask(__name__)
-
 last_rate = None
 
 def get_rate():
@@ -29,7 +28,7 @@ def send_message(text):
     requests.post(url, json={"chat_id": CHAT_ID, "text": text})
 
 def rate_checker():
-    """Continuously check for rate changes"""
+    """Check rate continuously and notify on change"""
     global last_rate
     while True:
         try:
